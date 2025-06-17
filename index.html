@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Heroic Voice Story</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    audio {
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      background-color: #1db954;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1ed760;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      color: #aaaaaa;
+    }
+  </style>
+</head>
+<body>
+  <h1>When Thirst Struck the Desert</h1>
+
+  <!-- Replace the URL below with your MP3 link -->
+  <audio controls>
+    <source src="https://www.example.com/your-audio.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <button onclick="speak()">🔊 Play with AI Voice</button>
+
+  <div class="footer">Made with ❤️ by You</div>
+
+  <script>
+    function speak() {
+      const msg = new SpeechSynthesisUtterance("When thirst struck the desert, one pigeon rose to become a hero.");
+      msg.lang = 'en-US';
+      msg.rate = 1;
+      msg.pitch = 1;
+      window.speechSynthesis.speak(msg);
+    }
+  </script>
+</body>
+</html>
