@@ -3,72 +3,116 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Heroic Voice Story</title>
+  <title>Text to Speech | AI Female Voice</title>
   <style>
     body {
-      background-color: #121212;
-      color: #ffffff;
+      background: linear-gradient(to right, #141e30, #243b55);
+      color: white;
       font-family: 'Segoe UI', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
-    }
-
-    h1 {
-      font-size: 2rem;
+      padding: 30px;
+      min-height: 100vh;
       text-align: center;
-      margin-bottom: 20px;
     }
-
-    audio {
+    textarea {
       width: 100%;
-      max-width: 500px;
+      max-width: 600px;
+      height: 150px;
+      padding: 15px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      resize: vertical;
       margin-bottom: 20px;
     }
-
-    button {
+    .btn {
       padding: 12px 24px;
       font-size: 16px;
-      border: none;
       background-color: #1db954;
-      color: #fff;
+      color: white;
+      border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      margin: 10px;
     }
-
-    button:hover {
-      background-color: #1ed760;
+    select, input[type="range"] {
+      margin: 10px;
+      padding: 5px;
+      border-radius: 6px;
     }
-
-    .footer {
-      margin-top: 40px;
-      font-size: 0.9rem;
-      color: #aaaaaa;
+    label {
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <h1>When Thirst Struck the Desert</h1>
+  <h1>🎤 AI Voice GENERATOR BY MODAPPSKING </h1>
+  <p>Write something and hear it in a female AI voice</p>
 
-  <!-- Replace the URL below with your MP3 link -->
-  <audio controls>
-    <source src="https://www.example.com/your-audio.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+  <textarea id="text" placeholder="Type your story or dialogue here...">When thirst struck the desert, one pigeon rose to become a hero.</textarea><br>
 
-  <button onclick="speak()">🔊 Play with AI Voice</button>
+  <label>🎚️ Pitch: <span id="pitchVal">1</span></label>
+  <input type="range" id="pitch" min="0.5" max="2" step="0.1" value="1"><br>
 
-  <div class="footer">Made with ❤️ by You</div>
+  <label>⏩ Speed: <span id="rateVal">1</span></label>
+  <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1"><br>
+
+  <label>🎙️ Choose Voice:</label>
+  <select id="voiceSelect"></select><br>
+
+  <button class="btn" onclick="speak()">🔊 Speak</button>
 
   <script>
+    const pitchSlider = document.getElementById("pitch");
+    const rateSlider = document.getElementById("rate");
+    const pitchVal = document.getElementById("pitchVal");
+    const rateVal = document.getElementById("rateVal");
+
+    pitchSlider.oninput = () => pitchVal.textContent = pitchSlider.value;
+    rateSlider.oninput = () => rateVal.textContent = rateSlider.value;
+
+    const voiceSelect = document.getElementById("voiceSelect");
+    let voices = [];
+
+    function populateVoices() {
+      voices = window.speechSynthesis.getVoices();
+      voiceSelect.innerHTML = "";
+      voices.forEach((voice, i) => {
+        if (voice.lang.includes("en") && voice.name.toLowerCase().includes("female")) {
+          let option = document.createElement("option");
+          option.value = i;
+          option.textContent = `${voice.name} (${voice.lang})`;
+          voiceSelect.appendChild(option);
+        }
+      });
+
+      // Fallback: list all voices
+      if (voiceSelect.options.length === 0) {
+        voices.forEach((voice, i) => {
+          let option = document.createElement("option");
+          option.value = i;
+          option.textContent = `${voice.name} (${voice.lang})`;
+          voiceSelect.appendChild(option);
+        });
+      }
+    }
+
+    window.speechSynthesis.onvoiceschanged = populateVoices;
+
     function speak() {
-      const msg = new SpeechSynthesisUtterance("When thirst struck the desert, one pigeon rose to become a hero.");
-      msg.lang = 'en-US';
-      msg.rate = 1;
-      msg.pitch = 1;
+      const text = document.getElementById("text").value;
+      const pitch = parseFloat(pitchSlider.value);
+      const rate = parseFloat(rateSlider.value);
+      const selectedVoice = voices[voiceSelect.value];
+
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.pitch = pitch;
+      msg.rate = rate;
+      msg.voice = selectedVoice;
+
+      window.speechSynthesis.cancel(); // Stop previous speech
       window.speechSynthesis.speak(msg);
     }
   </script>
